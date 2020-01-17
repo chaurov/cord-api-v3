@@ -1,5 +1,8 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
+import { ContextFunction } from 'apollo-server-core';
+import { Request, Response } from 'express';
+import { GqlContextType } from './common';
 import { AreaResolver } from './components/area/area.resolver';
 import { AreaService } from './components/area/area.service';
 import { RegionResolver } from './components/region/region.resolver';
@@ -20,8 +23,20 @@ import { AdminResolver } from './components/admin/admin.resolver';
 import { AuthService } from './components/auth/auth.service';
 import { AuthResolver } from './components/auth/auth.resolver';
 
+const context: ContextFunction<{ req: Request; res: Response }, GqlContextType> = ({
+  req,
+  res,
+}) => ({
+  token: req.header('token'),
+});
+
 @Module({
-  imports: [GraphQLModule.forRoot({ autoSchemaFile: 'schema.gql', context: ({ req, res }) => ({ req, res }) })],
+  imports: [
+    GraphQLModule.forRoot({
+      autoSchemaFile: 'schema.gql',
+      context,
+    }),
+  ],
   controllers: [],
   providers: [
     AreaResolver,
