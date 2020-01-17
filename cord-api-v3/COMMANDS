@@ -21,3 +21,5 @@ cdk synth
 cdk deploy --require-approval never
 cdk diff
 cdk destroy --require-approval never
+
+npm run build && cdk synth && cdk deploy --require-approval never
